@@ -1,0 +1,28 @@
+# macOS system files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.flakes8
+.pytest_cache/
+
+# Environments
+.venv/
+venv/
+ENV/
+
+# Project specific
+# state.json은 과제 제출 시 데이터 포함 여부에 따라 결정하세요.
+# 만약 빈 상태로 제출해야 한다면 아래 주석을 해제하세요.
+# state.json
