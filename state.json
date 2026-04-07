@@ -1,12 +1,36 @@
-[
-    {
-        "question": "파이썬의 창시자는?",
-        "options": [
-            "귀도 반 로섬",
-            "제임스 고슬링",
-            "데니스 리치",
-            "리누스 토발즈"
-        ],
-        "answer": 1
-    }
-]
+{
+    "quizzes": [
+        {
+            "question": "C#에서 값 타입(Value Type)에 해당하는 것은?",
+            "options": ["string", "object", "class", "int"],
+            "answer": 4,
+            "hint": "구조체(struct)와 기본 숫자 데이터 타입은 값 타입입니다."
+        },
+        {
+            "question": "ASP.NET MVC 패턴에서 사용자의 요청을 제어하는 역할은?",
+            "options": ["Model", "View", "Controller", "ViewModel"],
+            "answer": 3,
+            "hint": "라우팅을 통해 가장 먼저 호출되는 곳입니다."
+        },
+        {
+            "question": ".NET에서 메모리를 자동으로 관리하는 시스템은?",
+            "options": ["JIT 컴파일러", "Garbage Collector", "CLR", "MSIL"],
+            "answer": 2,
+            "hint": "사용하지 않는 객체를 알아서 해제해줍니다."
+        },
+        {
+            "question": "MSSQL에서 기존 데이터를 수정하는 명령어는?",
+            "options": ["SELECT", "INSERT", "UPDATE", "DELETE"],
+            "answer": 3,
+            "hint": "WHERE 조건과 함께 주로 사용됩니다."
+        },
+        {
+            "question": "C#에서 상속이나 인터페이스 구현 시 사용하는 기호는?",
+            "options": [":", "::", "->", "=>"],
+            "answer": 1,
+            "hint": "클래스 이름 뒤에 붙여서 사용합니다."
+        }
+    ],
+    "high_score": 0,
+    "history": []
+}
