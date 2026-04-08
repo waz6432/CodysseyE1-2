@@ -11,9 +11,11 @@ class QuizRepository:
         
         # [기본 데이터 정의] 파일이 없거나 손상되었을 때 사용할 비상용 데이터
         self.default_quizzes = [
-            Quiz("C#에서 값 타입(Value Type)은?", ["string", "object", "class", "int"], 4, "기본 숫자 타입은 값 타입입니다."),
-            Quiz(".NET의 메모리 자동 관리 시스템은?", ["JIT", "GC", "CLR", "MSIL"], 2, "Garbage Collector의 약자입니다.")
-            # ... (필요에 따라 5개 이상 채워넣으시면 됩니다)
+            Quiz("C#에서 값 타입(Value Type)에 해당하는 것은?", ["string", "object", "class", "int"], 4, "구조체(struct)와 기본 숫자 데이터 타입은 값 타입입니다."),
+            Quiz("ASP.NET MVC 패턴에서 사용자의 요청을 제어하는 역할은?", ["Model", "View", "Controller", "ViewModel"], 3, "라우팅을 통해 가장 먼저 호출되는 곳입니다."),
+            Quiz(".NET에서 메모리를 자동으로 관리하는 시스템은?", ["JIT 컴파일러", "Garbage Collector", "CLR", "MSIL"], 2, "사용하지 않는 객체를 알아서 해제해줍니다."),
+            Quiz("MSSQL에서 기존 데이터를 수정하는 명령어는?", ["SELECT", "INSERT", "UPDATE", "DELETE"], 3, "WHERE 조건과 함께 주로 사용됩니다."),
+            Quiz("C#에서 상속이나 인터페이스 구현 시 사용하는 기호는?", [":", "::", "->", "=>"], 1, "클래스 이름 뒤에 붙여서 사용합니다.")
         ]
 
     def load_state(self):
