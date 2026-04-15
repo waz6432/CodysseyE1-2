@@ -56,17 +56,17 @@
             "hint": "클래스 이름 뒤에 붙여서 사용합니다."
         },
         {
-            "question": "테스트 문제",
+            "question": "1",
             "options": [
                 "1",
-                "2",
-                "3",
-                "4"
+                "1",
+                "1",
+                "1"
             ],
             "answer": 1,
-            "hint": "정답 1번"
+            "hint": "1"
         }
     ],
-    "high_score": 1,
+    "high_score": 0,
     "history": []
 }

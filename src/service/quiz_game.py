@@ -23,7 +23,7 @@ class QuizGame:
         elif choice == 2:
             self.add_quiz()
         elif choice == 3:
-            self.ui.show_message("퀴즈 목록 보기 기능을 준비 중입니다.")
+            self.show_quiz_list()
         elif choice == 4:
             self.ui.show_message("최고 점수 확인 기능을 준비 중입니다.")
         elif choice == 5:
@@ -115,3 +115,18 @@ class QuizGame:
         # repository.save_state가 퀴즈 객체 리스트를 알아서 to_dict()로 변환 후 저장합니다.
         self.repository.save_state(self.quiz_data)
         self.ui.show_message("\n새로운 퀴즈가 성공적으로 추가되었습니다! 🎉\n")
+
+    # 3. 퀴즈 목록 보기
+    def show_quiz_list(self):
+        """저장된 퀴즈 목록을 출력합니다."""
+        quizzes = self.quiz_data.get("quizzes", [])
+
+        # 1. 퀴즈가 없는 경우 처리
+        if not quizzes:
+            self.ui.show_error("저장된 퀴즈가 없습니다. 먼저 퀴즈를 추가해 주세요.")
+            return
+
+        # 2. 저장된 퀴즈 목록 확인
+        self.ui.show_message("\n=== 📚 저장된 퀴즈 목록 ===")
+        for index, quiz in enumerate(quizzes, 1):
+            self.ui.show_message(f"{index}. {quiz.question}")
