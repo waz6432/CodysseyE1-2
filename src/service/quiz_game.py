@@ -1,7 +1,7 @@
 import random
 from datetime import datetime
 
-from src.domin.quiz import Quiz
+from src.domain.quiz import Quiz
 
 class QuizGame:
     def __init__(self, ui, repository):
