@@ -54,17 +54,6 @@
             ],
             "answer": 1,
             "hint": "클래스 이름 뒤에 붙여서 사용합니다."
-        },
-        {
-            "question": "1",
-            "options": [
-                "1",
-                "1",
-                "1",
-                "1"
-            ],
-            "answer": 1,
-            "hint": "1"
         }
     ],
     "high_score": 2,
@@ -72,6 +61,24 @@
         {
             "score": 2,
             "total": 6
+        },
+        {
+            "played_at": "2026-04-15 17:17:14",
+            "question_count": 2,
+            "score": 2,
+            "total": 2
+        },
+        {
+            "played_at": "2026-04-15 17:18:15",
+            "question_count": 3,
+            "score": 0,
+            "total": 3
+        },
+        {
+            "played_at": "2026-04-15 17:18:22",
+            "question_count": 5,
+            "score": 2,
+            "total": 5
         }
     ]
 }

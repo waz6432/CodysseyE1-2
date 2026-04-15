@@ -1,3 +1,6 @@
+import random
+from datetime import datetime
+
 from src.domin.quiz import Quiz
 
 class QuizGame:
@@ -27,6 +30,10 @@ class QuizGame:
         elif choice == 4:
             self.show_high_score()
         elif choice == 5:
+            self.delete_quiz()
+        elif choice == 6:
+            self.show_score_history()
+        elif choice == 7:
             self.ui.show_message("프로그램을 종료합니다. 이용해 주셔서 감사합니다!")
             self.repository.save_state(self.quiz_data)
             self.is_running = False
@@ -41,25 +48,56 @@ class QuizGame:
             self.ui.show_error("등록된 퀴즈가 없습니다. 퀴즈를 먼저 추가해 주세요.")
             return
 
+        question_count = self.ui.get_valid_number(
+            f"몇 문제를 풀까요? (1~{len(quizzes)}): ",
+            1,
+            len(quizzes)
+        )
+        selected_quizzes = random.sample(quizzes, question_count)
+
         self.ui.show_message("퀴즈를 시작합니다! 화이팅! 🚀")
         score = 0
-        total_quizzes = len(quizzes)
+        total_quizzes = len(selected_quizzes)
 
-        # 2. 저장된 퀴즈 출제
-        for i, quiz in enumerate(quizzes, 1):
+        # 2. 저장된 퀴즈를 랜덤 순서로 출제
+        for i, quiz in enumerate(selected_quizzes, 1):
             # 딕셔너리를 직접 뒤지는 대신, Quiz 객체에게 "예쁘게 포맷팅된 문자열을 줘!"라고 요청합니다.
             quiz_text = quiz.get_formatted_text(quiz_number=i)
             
             # 퀴즈 출력
             self.ui.show_message(quiz_text) 
-            
-            # UI를 통해 사용자 입력 받기
-            user_answer = self.ui.get_valid_number("정답을 선택하세요: ", 1, len(quiz.options))
+
+            # 힌트는 문제당 1번만 허용하며, 사용 시 해당 문제 점수 1점 차감
+            hint_used = False
+            while True:
+                user_answer = self.ui.get_valid_number(
+                    f"정답을 선택하세요 (1~{len(quiz.options)}, 힌트: 0): ",
+                    0,
+                    len(quiz.options)
+                )
+
+                if user_answer != 0:
+                    break
+
+                if hint_used:
+                    self.ui.show_error("이 문제에서는 이미 힌트를 사용했습니다.")
+                    continue
+
+                if quiz.hint:
+                    self.ui.show_message(f"💡 힌트: {quiz.hint}")
+                    hint_used = True
+                else:
+                    self.ui.show_message("이 문제에는 등록된 힌트가 없습니다.")
 
             # Service가 직접 answer == user_answer를 비교하지 않고, 객체에게 채점을 맡깁니다.
             if quiz.check_answer(user_answer):
-                self.ui.show_message("정답입니다! 🎉\n")
-                score += 1
+                earned_score = 0 if hint_used else 1
+                score += earned_score
+
+                if hint_used:
+                    self.ui.show_message("정답입니다! (힌트 사용으로 0점)\n")
+                else:
+                    self.ui.show_message("정답입니다! 🎉\n")
             else:
                 self.ui.show_error(f"틀렸습니다. 정답은 {quiz.answer}번입니다.\n")
 
@@ -75,7 +113,10 @@ class QuizGame:
         # 플레이 이력 저장 (아직 퀴즈를 풀지 않은 경우 판단에 사용)
         if "history" not in self.quiz_data or not isinstance(self.quiz_data["history"], list):
             self.quiz_data["history"] = []
+        played_at = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         self.quiz_data["history"].append({
+            "played_at": played_at,
+            "question_count": total_quizzes,
             "score": score,
             "total": total_quizzes
         })
@@ -141,6 +182,33 @@ class QuizGame:
         for index, quiz in enumerate(quizzes, 1):
             self.ui.show_message(f"{index}. {quiz.question}")
 
+    # 5. 퀴즈 삭제
+    def delete_quiz(self):
+        """등록된 퀴즈를 선택해 삭제합니다."""
+        quizzes = self.quiz_data.get("quizzes", [])
+
+        if not quizzes:
+            self.ui.show_error("삭제할 퀴즈가 없습니다.")
+            return
+
+        self.ui.show_message("\n=== 🗑️ 퀴즈 삭제 ===")
+        for index, quiz in enumerate(quizzes, 1):
+            self.ui.show_message(f"{index}. {quiz.question}")
+
+        choice = self.ui.get_valid_number(
+            f"삭제할 퀴즈 번호를 선택하세요 (취소: 0, 1~{len(quizzes)}): ",
+            0,
+            len(quizzes)
+        )
+
+        if choice == 0:
+            self.ui.show_message("퀴즈 삭제를 취소했습니다.")
+            return
+
+        removed_quiz = quizzes.pop(choice - 1)
+        self.repository.save_state(self.quiz_data)
+        self.ui.show_message(f"'{removed_quiz.question}' 퀴즈를 삭제했습니다.")
+
     # 4. 최고 점수 확인
     def show_high_score(self):
         """최고 점수를 출력합니다."""
@@ -154,3 +222,21 @@ class QuizGame:
         # 2. 최고 점수 확인
         high_score = self.quiz_data.get("high_score", 0)
         self.ui.show_message(f"현재 최고 점수는 {high_score}점입니다.")
+
+    # 6. 점수 기록 히스토리 보기
+    def show_score_history(self):
+        """모든 게임 점수 기록을 최신순으로 출력합니다."""
+        history = self.quiz_data.get("history", [])
+
+        if not history:
+            self.ui.show_message("아직 저장된 점수 기록이 없습니다.")
+            return
+
+        self.ui.show_message("\n=== 📈 점수 기록 히스토리 ===")
+        for index, record in enumerate(reversed(history), 1):
+            played_at = record.get("played_at", "기록 시간 없음")
+            question_count = record.get("question_count", record.get("total", 0))
+            score = record.get("score", 0)
+            self.ui.show_message(
+                f"{index}. {played_at} | 문제 수: {question_count} | 점수: {score}"
+            )
