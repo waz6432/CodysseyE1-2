@@ -2,7 +2,7 @@
 import json
 import os
 from pathlib import Path
-from src.domin.quiz import Quiz
+from src.domain.quiz import Quiz
 
 class QuizRepository:
     def __init__(self):
