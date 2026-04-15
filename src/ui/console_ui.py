@@ -30,11 +30,13 @@ class ConsoleUI:
         print(" 2. 퀴즈 추가")
         print(" 3. 퀴즈 목록 보기")
         print(" 4. 최고 점수 확인")
-        print(" 5. 프로그램 종료")
+        print(" 5. 퀴즈 삭제")
+        print(" 6. 점수 기록 히스토리 보기")
+        print(" 7. 프로그램 종료")
         print("="*30)
         
-        # 문자열 리턴 대신, 공통 입력 함수를 사용해 1~5 사이의 정수를 리턴받음
-        return self.get_valid_number("번호를 선택하세요: ", 1, 5)
+        # 문자열 리턴 대신, 공통 입력 함수를 사용해 1~7 사이의 정수를 리턴받음
+        return self.get_valid_number("번호를 선택하세요: ", 1, 7)
 
     def show_message(self, message):
         print(f"\n[알림] {message}")
