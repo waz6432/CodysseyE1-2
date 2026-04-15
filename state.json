@@ -67,6 +67,11 @@
             "hint": "1"
         }
     ],
-    "high_score": 0,
-    "history": []
+    "high_score": 2,
+    "history": [
+        {
+            "score": 2,
+            "total": 6
+        }
+    ]
 }

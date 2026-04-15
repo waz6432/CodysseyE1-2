@@ -25,7 +25,7 @@ class QuizGame:
         elif choice == 3:
             self.show_quiz_list()
         elif choice == 4:
-            self.ui.show_message("최고 점수 확인 기능을 준비 중입니다.")
+            self.show_high_score()
         elif choice == 5:
             self.ui.show_message("프로그램을 종료합니다. 이용해 주셔서 감사합니다!")
             self.repository.save_state(self.quiz_data)
@@ -66,12 +66,22 @@ class QuizGame:
         # 모든 문제를 풀면 결과 표시
         self.ui.show_message(f"퀴즈 종료! 총 {total_quizzes}문제 중 {score}문제를 맞히셨습니다.")
         
-        # (보너스) 최고 점수 갱신 로직
+        # 최고 점수 비교 후 필요 시 갱신
         current_high_score = self.quiz_data.get("high_score", 0)
         if score > current_high_score:
             self.ui.show_message("🌟 최고 점수 갱신! 🌟")
             self.quiz_data["high_score"] = score
-            self.repository.save_state(self.quiz_data)
+
+        # 플레이 이력 저장 (아직 퀴즈를 풀지 않은 경우 판단에 사용)
+        if "history" not in self.quiz_data or not isinstance(self.quiz_data["history"], list):
+            self.quiz_data["history"] = []
+        self.quiz_data["history"].append({
+            "score": score,
+            "total": total_quizzes
+        })
+
+        # 파일에 최신 상태를 저장
+        self.repository.save_state(self.quiz_data)
 
     # 2. 퀴즈 추가
     def add_quiz(self):
@@ -130,3 +140,17 @@ class QuizGame:
         self.ui.show_message("\n=== 📚 저장된 퀴즈 목록 ===")
         for index, quiz in enumerate(quizzes, 1):
             self.ui.show_message(f"{index}. {quiz.question}")
+
+    # 4. 최고 점수 확인
+    def show_high_score(self):
+        """최고 점수를 출력합니다."""
+        history = self.quiz_data.get("history", [])
+
+        # 1. 아직 퀴즈를 풀지 않은 경우 처리
+        if not history:
+            self.ui.show_message("아직 퀴즈를 푼 기록이 없습니다. 먼저 퀴즈를 풀어보세요!")
+            return
+
+        # 2. 최고 점수 확인
+        high_score = self.quiz_data.get("high_score", 0)
+        self.ui.show_message(f"현재 최고 점수는 {high_score}점입니다.")
