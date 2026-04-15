@@ -1,3 +1,5 @@
+from src.domin.quiz import Quiz
+
 class QuizGame:
     def __init__(self, ui, repository):
         self.ui = ui
@@ -19,7 +21,7 @@ class QuizGame:
         if choice == 1:
             self.play_quiz() # 퀴즈 풀기 메서드 연결
         elif choice == 2:
-            self.ui.show_message("퀴즈 추가 기능을 준비 중입니다.")
+            self.add_quiz()
         elif choice == 3:
             self.ui.show_message("퀴즈 목록 보기 기능을 준비 중입니다.")
         elif choice == 4:
@@ -29,6 +31,7 @@ class QuizGame:
             self.repository.save_state(self.quiz_data)
             self.is_running = False
 
+    # 1. 퀴즈 시작
     def play_quiz(self):
         """퀴즈 풀기 전체 비즈니스 로직을 담당합니다."""
         quizzes = self.quiz_data.get("quizzes", [])
@@ -69,3 +72,46 @@ class QuizGame:
             self.ui.show_message("🌟 최고 점수 갱신! 🌟")
             self.quiz_data["high_score"] = score
             self.repository.save_state(self.quiz_data)
+
+    # 2. 퀴즈 추가
+    def add_quiz(self):
+        """새로운 퀴즈를 입력받아 데이터를 추가하고 저장합니다."""
+        self.ui.show_message("\n=== 📝 새로운 퀴즈 추가 ===")
+
+        # 1. 문제 입력 (빈칸 방지)
+        question = input("추가할 질문을 입력하세요: ").strip()
+        while not question:
+            self.ui.show_message("질문은 빈칸일 수 없습니다.")
+            question = input("추가할 질문을 입력하세요: ").strip()
+
+        # 2. 보기 입력 (4개 고정)
+        options = []
+        for i in range(1, 5):
+            option = input(f"보기 {i}번을 입력하세요: ").strip()
+            while not option:
+                self.ui.show_message("보기는 빈칸일 수 없습니다.")
+                option = input(f"보기 {i}번을 입력하세요: ").strip()
+            options.append(option)
+
+        # 3. 정답 입력 (ui 클래스의 메서드 활용)
+        answer = self.ui.get_valid_number("정답 번호를 입력하세요 (1~4): ", 1, 4)
+
+        # 4. 힌트 입력
+        hint = input("힌트를 입력하세요 (없으면 엔터): ").strip()
+        if not hint:
+            hint = "제공된 힌트가 없습니다."
+
+        # 5. 데이터 추가 (레파지토리 구조에 맞춰 Quiz 객체로 생성)
+        new_quiz = Quiz(question, options, answer, hint)
+        
+        # 만약의 경우를 대비한 방어적 코드
+        if "quizzes" not in self.quiz_data:
+            self.quiz_data["quizzes"] = []
+            
+        # 딕셔너리가 아닌 Quiz 객체를 리스트에 추가합니다.
+        self.quiz_data["quizzes"].append(new_quiz) 
+        
+        # 6. 저장 및 완료 메시지
+        # repository.save_state가 퀴즈 객체 리스트를 알아서 to_dict()로 변환 후 저장합니다.
+        self.repository.save_state(self.quiz_data)
+        self.ui.show_message("\n새로운 퀴즈가 성공적으로 추가되었습니다! 🎉\n")
