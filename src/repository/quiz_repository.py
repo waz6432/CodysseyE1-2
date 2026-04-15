@@ -30,12 +30,14 @@ class QuizRepository:
             with open(self.file_path, "r", encoding="utf-8") as f:
                 data = json.load(f)
                 
-                # 데이터가 비어있거나 잘못된 구조일 경우를 위한 방어
-                quizzes_data = data.get("quizzes", [])
-                if not quizzes_data:
+                # quizzes 키가 없거나 타입이 비정상인 경우만 기본값으로 복구합니다.
+                quizzes_data = data.get("quizzes")
+                if quizzes_data is None:
+                    quizzes_data = []
+                elif not isinstance(quizzes_data, list):
                     return self._get_default_state()
 
-                # 성공적으로 읽어온 경우 Quiz 객체로 변환
+                # 성공적으로 읽어온 경우(빈 리스트 포함) Quiz 객체로 변환
                 data["quizzes"] = [Quiz.from_dict(q) for q in quizzes_data]
                 return data
 
