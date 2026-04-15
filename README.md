@@ -68,8 +68,6 @@ python3 -m src.main
 
 ## 5. 파일 구조 (현재 기준)
 
-> 참고: 실제 디렉터리명은 `domain`이 아니라 `domin`입니다.
-
 ```text
 .
 ├── README.md
@@ -78,7 +76,7 @@ python3 -m src.main
 └── src/
     ├── __init__.py
     ├── main.py
-    ├── domin/
+    ├── domain/
     │   ├── __init__.py
     │   └── quiz.py                  # Quiz 도메인 모델
     ├── repository/
